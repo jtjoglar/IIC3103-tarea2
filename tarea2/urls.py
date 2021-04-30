@@ -20,9 +20,10 @@ from apirest import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('apirest/artistas', views.ArtistaList.as_view()),
+    path('apirest/artists', views.ArtistaList.as_view()),
     path('apirest/albums', views.AlbumList.as_view()),
     path('apirest/tracks', views.TrackList.as_view()),
+    path('apirest/artists/<str:artist_name>', views.ArtistaSelf.as_view()),
 ]
 
 #urlpatterns = format_suffix_patterns(urlpatterns)
