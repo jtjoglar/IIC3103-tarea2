@@ -6,7 +6,7 @@ class Artista(models.Model):
     age = models.IntegerField()
     albums = models.URLField(max_length=200)
     tracks = models.URLField(max_length=200)
-    self_artist = models.URLField(max_length=200)
+    self_artista = models.URLField(max_length=200)
 
     def __str__(self):
         return self.name
