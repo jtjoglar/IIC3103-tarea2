@@ -24,6 +24,7 @@ urlpatterns = [
     path('apirest/albums', views.AlbumList.as_view()),
     path('apirest/tracks', views.TrackList.as_view()),
     path('apirest/artists/<str:artist_name>', views.ArtistaSelf.as_view()),
+    path('apirest/artists/<str:artist_name>/albums', views.ArtistaAlbum.as_view()),
 ]
 
-#urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = format_suffix_patterns(urlpatterns)
