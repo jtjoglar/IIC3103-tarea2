@@ -20,15 +20,15 @@ from apirest import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('apirest/artists', views.ArtistaList.as_view()),
-    path('apirest/albums', views.AlbumList.as_view()),
-    path('apirest/tracks', views.TrackList.as_view()),
-    path('apirest/artists/<str:artist_name>', views.ArtistaSelf.as_view()),
-    path('apirest/artists/<str:artist_name>/albums', views.ArtistaAlbum.as_view()),
-    path('apirest/albums/<str:album_name>', views.AlbumSelf.as_view()),
-    path('apirest/albums/<str:album_name>/tracks', views.AlbumTracks.as_view()),
-    path('apirest/tracks/<str:track_name>', views.TrackSelf.as_view()),
-    path('apirest/artists/<str:artist_name>/tracks', views.ArtistaTracks.as_view()),
+    path('artists/', views.ArtistaList.as_view()),
+    path('albums/', views.AlbumList.as_view()),
+    path('tracks/', views.TrackList.as_view()),
+    path('artists/<str:artist_name>', views.ArtistaSelf.as_view()),
+    path('artists/<str:artist_name>/albums', views.ArtistaAlbum.as_view()),
+    path('albums/<str:album_name>', views.AlbumSelf.as_view()),
+    path('albums/<str:album_name>/tracks', views.AlbumTracks.as_view()),
+    path('tracks/<str:track_name>', views.TrackSelf.as_view()),
+    path('artists/<str:artist_name>/tracks', views.ArtistaTracks.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
