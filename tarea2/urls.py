@@ -21,10 +21,10 @@ from apirest import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #re_path(r'^artists$', views.ArtistaList.as_view()),
-    path('artists', views.ArtistaList.as_view()),
-    path('albums', views.AlbumList.as_view()),
-    path('tracks', views.TrackList.as_view()),
+    #path('artists', views.ArtistaList.as_view()),
+    re_path(r'^artists/?$', views.ArtistaList.as_view()),
+    re_path(r'^albums/?$', views.AlbumList.as_view()),
+    re_path(r'^tracks/?$', views.TrackList.as_view()),
     path('artists/<str:artist_name>', views.ArtistaSelf.as_view()),
     path('artists/<str:artist_name>/albums', views.ArtistaAlbum.as_view()),
     path('albums/<str:album_name>', views.AlbumSelf.as_view()),
