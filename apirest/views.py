@@ -9,7 +9,7 @@ from .models import Artista, Album, Track
 from .serializers import ArtistaSerializer, AlbumSerializer, TrackSerializer
 from base64 import b64encode
 
-url_base = 'localhost:8000/apirest/'
+url_base = 'localhost:8000/'
 
 class ArtistaList(APIView):
     def get(self, request):
@@ -31,7 +31,9 @@ class ArtistaList(APIView):
                 return Response(status=status.HTTP_409_CONFLICT)
 
             new_artist = Artista.objects.create(artist_id=name_encoded, name=artist_data['name'], age=artist_data['age'],
-                albums=f'{url_base}artists/{name_encoded}/albums', tracks=f'{url_base}artists/{name_encoded}/tracks', self_artista=f'{url_base}artists/{name_encoded}')
+                albums=f'{url_base}artists/{name_encoded}/albums', tracks=f'{url_base}artists/{name_encoded}/tracks')
+            #, self=f'{url_base}artists/{name_encoded}'
+            new_artist.self = f'{url_base}artists/{name_encoded}'
             new_artist.save()
             serializer = ArtistaSerializer(new_artist)
 
@@ -45,6 +47,15 @@ class ArtistaSelf(APIView):
             artista = Artista.objects.filter(artist_id=artist_name)
             serializer = ArtistaSerializer(artista[0])
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, artist_name):
+        if Artista.objects.filter(artist_id=artist_name):
+            artista = Artista.objects.filter(artist_id=artist_name)
+            artista.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -78,9 +89,8 @@ class ArtistaAlbum(APIView):
                     return Response(status=status.HTTP_409_CONFLICT)
 
                 new_album = Album.objects.create(album_id=name_encoded, name=album_data['name'], genre=album_data['genre'],
-                    artist_id=artista[0], artist=f'{url_base}artists/{artist_name}', tracks=f'{url_base}albums/{name_encoded}/tracks',
-                    self_album=f'{url_base}albums/{name_encoded}')
-
+                    artist_id=artista[0], artist=f'{url_base}artists/{artist_name}', tracks=f'{url_base}albums/{name_encoded}/tracks')
+                new_album.self = f'{url_base}albums/{name_encoded}'
                 new_album.save()
                 serializer = AlbumSerializer(new_album)
 
@@ -102,6 +112,17 @@ class ArtistaTracks(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+class ArtistPlay(APIView):
+    def put(self, request, artist_name):
+        if Artista.objects.filter(artist_id=artist_name):
+            tracks = Track.objects.filter(artist_id=artist_name)
+            for track in tracks:
+                track.times_played += 1
+                track.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
 class AlbumList(APIView):
     def get(self, request):
         albums = Album.objects.all()
@@ -114,6 +135,15 @@ class AlbumSelf(APIView):
             album = Album.objects.filter(album_id=album_name)
             serializer = AlbumSerializer(album[0])
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, album_name):
+        if Album.objects.filter(album_id=album_name):
+            album = Album.objects.filter(album_id=album_name)
+            album.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -147,9 +177,8 @@ class AlbumTracks(APIView):
                     return Response(status=status.HTTP_409_CONFLICT)
 
                 new_track = Track.objects.create(track_id=name_encoded, name=track_data['name'], duration=track_data['duration'], times_played=0,
-                    album_id=album[0], artist_id=artista[0], artist=f'{url_base}artists/{artista[0].artist_id}', album=f'{url_base}albums/{album_name}',
-                    self_track=f'{url_base}tracks/{name_encoded}')
-
+                    album_id=album[0], artist_id=artista[0], artist=f'{url_base}artists/{artista[0].artist_id}', album=f'{url_base}albums/{album_name}')
+                new_track.self = f'{url_base}tracks/{name_encoded}'
                 new_track.save()
                 serializer = TrackSerializer(new_track)
 
@@ -160,6 +189,18 @@ class AlbumTracks(APIView):
 
         else:
             return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+class AlbumPlay(APIView):
+    def put(self, request, album_name):
+        if Album.objects.filter(album_id=album_name):
+            tracks = Track.objects.filter(album_id=album_name)
+            for track in tracks:
+                track.times_played += 1
+                track.save()
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 class TrackList(APIView):
     def get(self, request):
@@ -174,5 +215,25 @@ class TrackSelf(APIView):
             serializer = TrackSerializer(track[0])
             return Response(serializer.data, status=status.HTTP_200_OK)
 
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, track_name):
+        if Track.objects.filter(track_id=track_name):
+            track = Track.objects.filter(track_id=track_name)
+            track.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+class TrackPlay(APIView):
+    def put(self, request, track_name):
+        if Track.objects.filter(track_id=track_name):
+            track = Track.objects.get(track_id=track_name)
+            track.times_played += 1
+            track.save()
+            serializer = TrackSerializer(track)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)

@@ -29,6 +29,9 @@ urlpatterns = [
     path('albums/<str:album_name>/tracks', views.AlbumTracks.as_view()),
     path('tracks/<str:track_name>', views.TrackSelf.as_view()),
     path('artists/<str:artist_name>/tracks', views.ArtistaTracks.as_view()),
+    path('artists/<str:artist_name>/albums/play', views.ArtistPlay.as_view()),
+    path('albums/<str:album_name>/tracks/play', views.AlbumPlay.as_view()),
+    path('tracks/<str:track_name>/play', views.TrackPlay.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -6,7 +6,7 @@ class Artista(models.Model):
     age = models.IntegerField()
     albums = models.URLField(max_length=200)
     tracks = models.URLField(max_length=200)
-    self_artista = models.URLField(max_length=200)
+    self = models.URLField(max_length=200, blank=True)
 
     def __str__(self):
         return self.name
@@ -18,7 +18,7 @@ class Album(models.Model):
     artist_id = models.ForeignKey(Artista, on_delete=models.CASCADE)
     artist = models.URLField(max_length=200)
     tracks = models.URLField(max_length=200)
-    self_album = models.URLField(max_length=200)
+    self = models.URLField(max_length=200, blank=True)
 
 
     def __str__(self):
@@ -33,8 +33,12 @@ class Track(models.Model):
     artist_id = models.ForeignKey(Artista, on_delete=models.CASCADE)
     artist = models.URLField(max_length=200)
     album = models.URLField(max_length=200)
-    self_track = models.URLField(max_length=200)
+    self = models.URLField(max_length=200, blank=True)
 
 
     def __str__(self):
         return self.name
+
+    def play(self):
+        self.times_played = self.times_played + 1
+        return 0
