@@ -19,7 +19,7 @@ class ArtistaList(APIView):
 
     def post(self, request):
         #{"artist_id": "2", "name": "Michael Jackson", "age": 38}
-        try:
+        try :
             artist_data = request.data
             #Revisamos que el request sea correcto
             if 'name' in artist_data.keys() and 'age' in artist_data.keys():
@@ -29,7 +29,9 @@ class ArtistaList(APIView):
                     name_encoded = name_encoded[:22]
                 #Busca si ya existe en la base
                 if Artista.objects.filter(artist_id=name_encoded):
-                    return Response(status=status.HTTP_409_CONFLICT)
+                    art_existente = Artista.objects.get(artist_id=name_encoded)
+                    serializer = ArtistaSerializer(art_existente)
+                    return Response(serializer.data, status=status.HTTP_409_CONFLICT)
 
                 new_artist = Artista.objects.create(artist_id=name_encoded, name=artist_data['name'], age=artist_data['age'],
                     albums=f'{url_base}artists/{name_encoded}/albums', tracks=f'{url_base}artists/{name_encoded}/tracks')
@@ -40,10 +42,10 @@ class ArtistaList(APIView):
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response('HTTP 400 BAD REQUEST', status=status.HTTP_400_BAD_REQUEST)
         except:
-            print('\nExepción\n')
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class ArtistaSelf(APIView):
     def get(self, request, artist_name):
@@ -91,7 +93,9 @@ class ArtistaAlbum(APIView):
                         name_encoded = name_encoded[:22]
                     #Busca si ya existe en la base
                     if Album.objects.filter(album_id=name_encoded):
-                        return Response(status=status.HTTP_409_CONFLICT)
+                        album_existente = Album.objects.get(album_id=name_encoded)
+                        serializer = AlbumSerializer(album_existente)
+                        return Response(serializer.data, status=status.HTTP_409_CONFLICT)
 
                     new_album = Album.objects.create(album_id=name_encoded, name=album_data['name'], genre=album_data['genre'],
                         artist_id=artista[0], artist=f'{url_base}artists/{artist_name}', tracks=f'{url_base}albums/{name_encoded}/tracks')
@@ -108,7 +112,6 @@ class ArtistaAlbum(APIView):
             else:
                 return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         except:
-            print('\nExepción\n')
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class ArtistaTracks(APIView):
@@ -184,7 +187,9 @@ class AlbumTracks(APIView):
                         name_encoded = name_encoded[:22]
                     #Busca si ya existe en la base
                     if Track.objects.filter(track_id=name_encoded):
-                        return Response(status=status.HTTP_409_CONFLICT)
+                        track_existente = Track.objects.get(track_id=name_encoded)
+                        serializer = TrackSerializer(track_existente)
+                        return Response(serializer.data, status=status.HTTP_409_CONFLICT)
 
                     new_track = Track.objects.create(track_id=name_encoded, name=track_data['name'], duration=track_data['duration'], times_played=0,
                         album_id=album[0], artist_id=artista[0], artist=f'{url_base}artists/{artista[0].artist_id}', album=f'{url_base}albums/{album_name}')
@@ -201,7 +206,6 @@ class AlbumTracks(APIView):
             else:
                 return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         except:
-            print('\nExepción\n')
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class AlbumPlay(APIView):
