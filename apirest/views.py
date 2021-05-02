@@ -9,7 +9,7 @@ from .models import Artista, Album, Track
 from .serializers import ArtistaSerializer, AlbumSerializer, TrackSerializer
 from base64 import b64encode
 
-url_base = 'localhost:8000/'
+url_base = 'https://tarea2-jtjoglar.herokuapp.com/'
 
 class ArtistaList(APIView):
     def get(self, request):
