@@ -9,7 +9,7 @@
 1. Largo en bits de la dirección IP de destino: 32 bits.
 2. Dirección IP de origen: 192.168.3.2
 3. Dirección IP de origen: 3.3.0.2
-4. 
+4. A continuación se muestran las etapas separadas por capas:
 ### In Layers
 
 #### Layer 1
